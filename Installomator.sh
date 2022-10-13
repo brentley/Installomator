@@ -18,6 +18,11 @@ label="" # if no label is sent to the script, this will be used
 
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin
 
+if /usr/bin/pgrep -q CptHost; then
+  echo "There is a Zoom Meeting"
+  exit 0
+fi
+
 # NOTE: adjust these variables:
 
 # set to 0 for production, 1 or 2 for debugging
@@ -25,7 +30,7 @@ export PATH=/usr/bin:/bin:/usr/sbin:/sbin
 # also no actual installation will be performed
 # debug mode 1 will download to the directory the script is run in, but will not check the version 
 # debug mode 2 will download to the temp directory, check for blocking processes, check the version, but will not install anything or remove the current version
-DEBUG=1
+DEBUG=0
 
 # notify behavior
 NOTIFY=success
@@ -36,7 +41,7 @@ NOTIFY=success
 
 
 # behavior when blocking processes are found
-BLOCKING_PROCESS_ACTION=tell_user
+BLOCKING_PROCESS_ACTION=prompt_user_loop
 # options:
 #   - ignore       continue even when blocking processes are found
 #   - quit         app will be told to quit nicely if running
@@ -87,7 +92,7 @@ LOGO=appstore
 
 
 # App Store apps handling
-IGNORE_APP_STORE_APPS=no
+IGNORE_APP_STORE_APPS=yes
 # options:
 #  - no            If the installed app is from App Store (which include VPP installed apps)
 #                  it will not be touched, no matter its version (default)
@@ -128,13 +133,13 @@ REOPEN="yes"
 
 
 # Interrupt Do Not Disturb (DND) full screen apps
-INTERRUPT_DND="yes"
+INTERRUPT_DND="no"
 # options:
 #  - yes           Script will run without checking for DND full screen apps.
 #  - no            Script will exit when an active DND full screen app is detected.
 
 # Comma separated list of app names to ignore when evaluating DND
-IGNORE_DND_APPS=""
+IGNORE_DND_APPS="Amphetamine,caffeinate,Skype"
 # example that will ignore browsers when evaluating DND:
 # IGNORE_DND_APPS="firefox,Google Chrome,Safari,Microsoft Edge,Opera,Amphetamine,caffeinate"
 
@@ -5483,4 +5488,4 @@ esac
 finishing
 
 # all done!
-cleanupAndExit 0 "All done!" REQ
+cleanupAndExit 0 "All done!" REQ 
